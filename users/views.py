@@ -1,12 +1,17 @@
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from .serializers import CustomTokenObtainPair, User,Userserializer
 from rest_framework import generics, mixins , status , renderers
 from rest_framework.response import Response
 
 
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPair
+    renderer_classes = [renderers.JSONRenderer]
 
+class CustomTokenRefreshView(TokenRefreshView):
+    renderer_classes = [renderers.JSONRenderer]
+    
 class UserView(generics.GenericAPIView , mixins.ListModelMixin , mixins.CreateModelMixin):
 
     queryset = User.objects.all()
@@ -29,3 +34,4 @@ class UserView(generics.GenericAPIView , mixins.ListModelMixin , mixins.CreateMo
         serializer.is_valid(raise_exception = True)
         self.perform_create(serializer=serializer)
         return Response(serializer.data , status=status.HTTP_201_CREATED)
+    
